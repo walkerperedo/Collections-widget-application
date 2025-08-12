@@ -1,0 +1,54 @@
+/* Define global variables for consistent theming */
+:root {
+  --color-primary: #121212;
+  --color-secondary: #6b7280;
+  --spacing-unit: 8px;
+  --border-radius: 4px;
+}
+
+/* Mobile-First Layout for the main App */
+.product-collection-widget {
+  display: flex;
+  flex-direction: column; /* Stack filter and products on mobile */
+  gap: calc(var(--spacing-unit) * 3);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+  gap: calc(var(--spacing-unit) * 2);
+}
+
+.product-card {
+  /* Styles for the product card... */
+  text-decoration: none;
+  color: var(--color-primary);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .product-collection-widget {
+    flex-direction: row; /* Side-by-side layout on larger screens */
+    align-items: flex-start;
+  }
+  .filter-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+  }
+  .product-list-container {
+    flex-grow: 1;
+  }
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on tablet */
+  }
+}
+
+/* Desktop screens */
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+  }
+}
