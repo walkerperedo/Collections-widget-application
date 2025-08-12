@@ -2,13 +2,19 @@ export interface Product {
 	id: string
 	title: string
 	handle: string
-	price: {
-		amount: string
-		currencyCode: string
+	priceRange: {
+		minVariantPrice: {
+			amount: string
+			currencyCode: string
+		}
 	}
-	image: {
-		url: string
-		altText: string | null
+	media: {
+		nodes: {
+			previewImage: {
+				url: string
+				id: string
+			}
+		}[]
 	}
 	vendor: string
 	productType: string
