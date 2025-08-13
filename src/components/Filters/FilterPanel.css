@@ -1,21 +1,70 @@
-/* === Mobile-first styles === */
-.filter-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem; /* space between filter groups */
-  padding: 1rem;
-  background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+.filters-toggle {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-/* Each filter group (label + select) */
+.filter-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.filter-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.filter-panel {
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 280px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  transform: translateX(-100%);
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.filter-overlay.active .filter-panel {
+  transform: translateX(0);
+}
+
+.filter-close {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  color: #555;
+  cursor: pointer;
+  padding: 0;
+}
+
 .filter-group {
   display: flex;
   flex-direction: column;
 }
 
-/* Filter labels */
 .filter-group label {
   font-size: 0.875rem;
   font-weight: 500;
@@ -23,10 +72,9 @@
   color: #222;
 }
 
-/* Shopify-like select styling */
 .filter-group select {
   appearance: none;
-  background-color: #fff;
+  background: #fff;
   border: 1px solid #d1d5db;
   border-radius: 4px;
   padding: 0.5rem 2rem 0.5rem 0.75rem;
@@ -39,35 +87,8 @@
   background-size: 1rem;
 }
 
-/* Hover/focus states */
 .filter-group select:focus {
   outline: none;
   border-color: #9ca3af;
-  box-shadow: 0 0 0 2px rgba(0, 128, 96, 0.2); /* Shopify green-ish focus */
-}
-.filter-group select:hover {
-  border-color: #9ca3af;
-}
-
-/* === Tablet/Desktop styles === */
-@media (min-width: 768px) {
-  .filter-panel {
-    position: sticky;
-    top: 1rem;
-    align-self: start;
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
-    padding: 1rem;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-  }
-
-  /* Scrollbar for long filter lists */
-  .filter-panel::-webkit-scrollbar {
-    width: 6px;
-  }
-  .filter-panel::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 3px;
-  }
+  box-shadow: 0 0 0 2px rgba(0, 128, 96, 0.2);
 }

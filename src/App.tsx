@@ -7,19 +7,18 @@ import { FilterPanel } from './components/Filters/FilterPanel'
 import './assets/main.css'
 
 interface AppProps {
-  storefrontApiToken: string
-  storeUrl: string
-  collectionHandle: string
+  collectionId: string
 }
 
-const App: React.FC<AppProps> = () => {
+const App: React.FC<AppProps> = ({ collectionId }) => {
+  const collectionIdFormatted = `gid://shopify/Collection/${collectionId}`
   const [sortOption, setSortOption] = useState('price-asc')
 
   const sortKey = 'PRICE'
   const reverse = sortOption === 'price-desc'
 
   const { products, loading, error, filters, setActiveFilters } = useProducts(
-    shopifyConfig.collectionId,
+    collectionIdFormatted,
     shopifyConfig.apiToken,
     shopifyConfig.storeUrl,
     sortKey,
@@ -28,9 +27,11 @@ const App: React.FC<AppProps> = () => {
 
   return (
     <div className="product-collection-widget">
-      <FilterPanel filters={filters} setActiveFilters={setActiveFilters} />
-      <main className="product-list-container">
+      <div className="filter-sort-controls">
+        <FilterPanel filters={filters} setActiveFilters={setActiveFilters} />
         <SortDropdown value={sortOption} onChange={setSortOption} />
+      </div>
+      <main className="product-list-container">
         {error && <p className="error-message">{error}</p>}
         <ProductGrid products={products} loading={loading} />
         {/* A button or intersection observer would call loadMore */}

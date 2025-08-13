@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './FilterPanel.css'
 import type { ActiveFilters, ProductFilter } from '../../types/shopify'
 
@@ -9,6 +9,7 @@ interface FilterPanelProps {
 
 export const FilterPanel: React.FC<FilterPanelProps> = ({ filters, setActiveFilters }) => {
   const NO_VALUE_SUFFIX = '-novalue'
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const onFilterChange = (filterValue: string) => {
     const isNoValue = filterValue.endsWith(NO_VALUE_SUFFIX)
@@ -25,28 +26,39 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ filters, setActiveFilt
         return filter
       })
     )
+    setFiltersOpen(false)
   }
   return (
-    <aside className="filter-panel">
-      {filters.map((filter) => (
-        <div key={filter.id} className="filter-group">
-          <label htmlFor={`${filter.id}-filter`}>{filter.label}</label>
-          <select
-            id={`${filter.id}-filter`}
-            defaultValue={`${filter.values[0].input}${NO_VALUE_SUFFIX}`}
-            onChange={(e) => {
-              onFilterChange(e.target.value)
-            }}
-          >
-            <option value={`${filter.values[0].input}${NO_VALUE_SUFFIX}`}>No option selected</option>
-            {filter.values.map((valueFilter) => (
-              <option key={valueFilter.input} value={valueFilter.input}>
-                {valueFilter.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
-    </aside>
+    <>
+      <button className="filters-toggle" onClick={() => setFiltersOpen(true)}>
+        Filters
+      </button>
+      <div className={`filter-overlay ${filtersOpen ? 'active' : ''}`} onClick={() => setFiltersOpen(false)}>
+        <aside className="filter-panel" onClick={(e) => e.stopPropagation()}>
+          <button className="filter-close" onClick={() => setFiltersOpen(false)} aria-label="Close filters">
+            &times;
+          </button>
+          {filters.map((filter) => (
+            <div key={filter.id} className="filter-group">
+              <label htmlFor={`${filter.id}-filter`}>{filter.label}</label>
+              <select
+                id={`${filter.id}-filter`}
+                defaultValue={`${filter.values[0].input}${NO_VALUE_SUFFIX}`}
+                onChange={(e) => {
+                  onFilterChange(e.target.value)
+                }}
+              >
+                <option value={`${filter.values[0].input}${NO_VALUE_SUFFIX}`}>No option selected</option>
+                {filter.values.map((valueFilter) => (
+                  <option key={valueFilter.input} value={valueFilter.input}>
+                    {valueFilter.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </aside>
+      </div>
+    </>
   )
 }
