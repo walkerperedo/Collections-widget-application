@@ -1,29 +1,36 @@
-import "./assets/main.css"
-import { ProductGrid } from './components/ProductGrid/ProductGrid';
-import { useProducts } from './hooks/useProducts';
+import { useState } from 'react'
+import { ProductGrid } from './components/ProductGrid/ProductGrid'
+import { SortDropdown } from './components/Sort/SortDropdown'
+import { useProducts } from './hooks/useProducts'
+import { shopifyConfig } from './shopify.config'
+import { FilterPanel } from './components/Filters/FilterPanel'
+import './assets/main.css'
 
 interface AppProps {
-  storefrontApiToken: string;
-  storeUrl: string;
-  collectionHandle: string;
+  storefrontApiToken: string
+  storeUrl: string
+  collectionHandle: string
 }
 
 const App: React.FC<AppProps> = () => {
-  const storeUrl = "deliverydatetesttech.myshopify.com"
-  const collectionId = "gid://shopify/Collection/276014923913";
-  const storefrontApiToken = "13ba02d226b474421f69933ac5bbe93e";
-  const { products, loading, error} = useProducts(collectionId, storefrontApiToken, storeUrl);
+  const [sortOption, setSortOption] = useState('price-asc')
+
+  const sortKey = 'PRICE'
+  const reverse = sortOption === 'price-desc'
+
+  const { products, loading, error, filters, setActiveFilters } = useProducts(
+    shopifyConfig.collectionId,
+    shopifyConfig.apiToken,
+    shopifyConfig.storeUrl,
+    sortKey,
+    reverse
+  )
 
   return (
     <div className="product-collection-widget">
-      {/* <aside className="filter-sidebar">
-        <FilterPanel
-          activeFilters={activeFilters}
-          onFilterChange={setActiveFilters}
-        />
-      </aside> */}
+      <FilterPanel filters={filters} setActiveFilters={setActiveFilters} />
       <main className="product-list-container">
-        {/* We would also add a SortDropdown component here */}
+        <SortDropdown value={sortOption} onChange={setSortOption} />
         {error && <p className="error-message">{error}</p>}
         <ProductGrid products={products} loading={loading} />
         {/* A button or intersection observer would call loadMore */}
