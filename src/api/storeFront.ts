@@ -8,7 +8,8 @@ export async function fetchProductsFromShopify(
   collectionId: string,
   sortKey: string,
   reverse: boolean,
-  activeFilters: ActiveFilters[]
+  activeFilters: ActiveFilters[],
+  afterCursor?: string | null
 ) {
   const client = createStorefrontApiClient({
     storeDomain: storeUrl,
@@ -18,23 +19,29 @@ export async function fetchProductsFromShopify(
 
   try {
     const variables = {
-      variables: {
-        collectionId,
-        first: 9,
-        reverse,
-        sortKey,
-        activeFilters,
-      },
+      collectionId,
+      first: 9,
+      reverse,
+      sortKey,
+      activeFilters,
+      after: afterCursor ?? null,
     }
 
-    const { errors, data } = await client.request(GET_PRODUCTS_IN_COLLECTION_QUERY, variables)
+    const { errors, data } = await client.request(GET_PRODUCTS_IN_COLLECTION_QUERY, { variables })
 
     if (errors) {
       console.error(errors)
       throw new Error('Failed to fetch products from Shopify.')
     }
 
-    return data.collection.products
+    const productsData = data.collection.products
+
+    return {
+      nodes: productsData.nodes,
+      filters: productsData.filters,
+      hasNextPage: productsData.pageInfo.hasNextPage,
+      endCursor: productsData.pageInfo.endCursor,
+    }
   } catch {
     throw new Error('Could not fetch products.')
   }

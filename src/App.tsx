@@ -4,6 +4,7 @@ import { SortDropdown } from './components/Sort/SortDropdown'
 import { useProducts } from './hooks/useProducts'
 import { shopifyConfig } from './shopify.config'
 import { FilterPanel } from './components/Filters/FilterPanel'
+import { InfiniteScrollTrigger } from './components/UI/InfiniteScrollTrigger'
 import './assets/main.css'
 
 interface AppProps {
@@ -17,7 +18,7 @@ const App: React.FC<AppProps> = ({ collectionId }) => {
   const sortKey = 'PRICE'
   const reverse = sortOption === 'price-desc'
 
-  const { products, loading, error, filters, setActiveFilters } = useProducts(
+  const { products, loading, error, filters, setActiveFilters, loadMore, hasNextPage } = useProducts(
     collectionIdFormatted,
     shopifyConfig.apiToken,
     shopifyConfig.storeUrl,
@@ -34,7 +35,8 @@ const App: React.FC<AppProps> = ({ collectionId }) => {
       <main className="product-list-container">
         {error && <p className="error-message">{error}</p>}
         <ProductGrid products={products} loading={loading} />
-        {/* A button or intersection observer would call loadMore */}
+        {hasNextPage && <InfiniteScrollTrigger onLoadMore={loadMore} hasNextPage={hasNextPage} loading={loading} />}
+        {loading && <p>Loading…</p>}
       </main>
     </div>
   )

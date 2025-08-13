@@ -12,16 +12,30 @@ export function useProducts(collectionId: string, apiToken: string, storeUrl: st
     { productVendor: undefined },
     { available: undefined },
   ])
+  const [endCursor, setEndCursor] = useState<string | null>(null)
+  const [hasNextPage, setHasNextPage] = useState(true)
 
   const loadProducts = useCallback(
-    async (append: boolean = true) => {
+    async (append: boolean = true, cursorOverride?: string | null) => {
+      if (append && !hasNextPage) return
+      if (!append) {
+        setProducts([])
+        setEndCursor(null)
+        setHasNextPage(true)
+      }
+
       setLoading(true)
       setError(null)
       try {
-        const productData = await fetchProductsFromShopify(storeUrl, apiToken, collectionId, sortKey, reverse, activeFilters)
-        const filterNew = productData.filters.filter((filter: ProductFilter) => !filter.id.includes('price'))
-        setFilters(filterNew || [])
+        const cursorToUse = append ? cursorOverride ?? endCursor : null
+        const productData = await fetchProductsFromShopify(storeUrl, apiToken, collectionId, sortKey, reverse, activeFilters, cursorToUse)
+
+        const cleanedFilters = productData.filters.filter((filter: ProductFilter) => !filter.id.includes('price'))
+        setFilters(cleanedFilters || [])
+
         setProducts((prev) => (append ? [...prev, ...productData.nodes] : productData.nodes))
+        setEndCursor(productData.endCursor)
+        setHasNextPage(productData.hasNextPage)
       } catch (err) {
         console.error(err)
         setError('Failed to load products.')
@@ -43,6 +57,7 @@ export function useProducts(collectionId: string, apiToken: string, storeUrl: st
     filters,
     activeFilters,
     setActiveFilters,
-    loadMore: () => loadProducts(true),
+    hasNextPage,
+    loadMore: () => loadProducts(true, endCursor),
   }
 }
