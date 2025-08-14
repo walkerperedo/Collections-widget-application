@@ -12,7 +12,7 @@ interface ProductGridProps {
 export const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) => {
 	return (
 		<section className="product-grid" aria-live={loading ? 'polite' : undefined} aria-busy={loading}>
-			{loading
+			{loading && products.length === 0
 				? Array.from({ length: 6 }).map((_, i) => <SkeletonLoader key={i} />)
 				: products.map((product) => <ProductCard key={product.id} product={product} />)}
 		</section>

@@ -1,25 +1,24 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client'
 import { GET_PRODUCTS_IN_COLLECTION_QUERY } from './queries'
 import type { ActiveFilters } from '../types/shopify'
+import { newConfig } from '../main'
 
 export async function fetchProductsFromShopify(
-  storeUrl: string,
-  apiToken: string,
-  collectionId: string,
   sortKey: string,
   reverse: boolean,
   activeFilters: ActiveFilters[],
   afterCursor?: string | null
 ) {
+
   const client = createStorefrontApiClient({
-    storeDomain: storeUrl,
+    storeDomain: newConfig.storeUrl,
     apiVersion: '2025-07',
-    publicAccessToken: apiToken,
+    publicAccessToken: newConfig.apiToken,
   })
 
   try {
     const variables = {
-      collectionId,
+      collectionId: newConfig.collectionId,
       first: 9,
       reverse,
       sortKey,

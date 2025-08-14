@@ -1,5 +1,11 @@
-export const shopifyConfig = {
-  storeUrl: 'deliverydatetesttech.myshopify.com',
-  collectionId: 'gid://shopify/Collection/276014923913',
-  apiToken: '13ba02d226b474421f69933ac5bbe93e',
-};
+export class ShopifyConfig {
+  storeUrl: string;
+  collectionId: string;
+  apiToken: string;
+
+  constructor(storeUrl: string, collectionId: string, apiToken: string) {
+    this.storeUrl = storeUrl;
+    this.collectionId = collectionId;
+    this.apiToken = apiToken;
+  }
+}

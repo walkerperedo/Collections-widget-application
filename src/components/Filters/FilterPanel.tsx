@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import './FilterPanel.css'
 import type { ActiveFilters, ProductFilter } from '../../types/shopify'
 
@@ -11,23 +11,27 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ filters, setActiveFilt
   const NO_VALUE_SUFFIX = '-novalue'
   const [filtersOpen, setFiltersOpen] = useState(false)
 
-  const onFilterChange = (filterValue: string) => {
+  const parseFilterValue = (filterValue: string) => {
     const isNoValue = filterValue.endsWith(NO_VALUE_SUFFIX)
     const rawJson = isNoValue ? filterValue.slice(0, -NO_VALUE_SUFFIX.length) : filterValue
     const parsed = JSON.parse(rawJson) as Record<string, string | undefined>
-    const filterKey = Object.keys(parsed)[0]
-
-    setActiveFilters((prev) =>
-      prev.map((filter) => {
-        const currentKey = Object.keys(filter)[0]
-        if (currentKey === filterKey) {
-          return { [filterKey]: isNoValue ? undefined : parsed[filterKey] }
-        }
-        return filter
-      })
-    )
-    setFiltersOpen(false)
+    return { key: Object.keys(parsed)[0], value: isNoValue ? undefined : parsed[Object.keys(parsed)[0]] }
   }
+
+  const onFilterChange = useCallback(
+    (filterValue: string) => {
+      const { key, value } = parseFilterValue(filterValue)
+
+      setActiveFilters((prev) =>
+        prev.map((filter) => {
+          const currentKey = Object.keys(filter)[0]
+          return currentKey === key ? { [key]: value } : filter
+        })
+      )
+      setFiltersOpen(false)
+    },
+    [setActiveFilters]
+  )
   return (
     <>
       <button className="filters-toggle" onClick={() => setFiltersOpen(true)}>

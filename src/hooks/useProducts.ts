@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import type { Product, ActiveFilters, ProductFilter } from '../types/shopify'
 import { fetchProductsFromShopify } from '../api/storeFront'
 
-export function useProducts(collectionId: string, apiToken: string, storeUrl: string, sortKey: string, reverse: boolean) {
+export function useProducts(sortKey: string, reverse: boolean) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -28,7 +28,7 @@ export function useProducts(collectionId: string, apiToken: string, storeUrl: st
       setError(null)
       try {
         const cursorToUse = append ? cursorOverride ?? endCursor : null
-        const productData = await fetchProductsFromShopify(storeUrl, apiToken, collectionId, sortKey, reverse, activeFilters, cursorToUse)
+        const productData = await fetchProductsFromShopify(sortKey, reverse, activeFilters, cursorToUse)
 
         const cleanedFilters = productData.filters.filter((filter: ProductFilter) => !filter.id.includes('price'))
         setFilters(cleanedFilters || [])
@@ -43,7 +43,7 @@ export function useProducts(collectionId: string, apiToken: string, storeUrl: st
         setLoading(false)
       }
     },
-    [storeUrl, apiToken, collectionId, sortKey, reverse, activeFilters]
+    [sortKey, reverse, activeFilters]
   )
 
   useEffect(() => {
