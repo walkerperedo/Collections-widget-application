@@ -6,7 +6,7 @@
 }
 
 .sort-dropdown label {
-  font-size: 0.875rem;
+  font-size: 1.5rem;
   color: #555;
   font-weight: 400;
 }
@@ -20,7 +20,7 @@
   border: 1px solid #d1d5db;
   border-radius: 4px;
   padding: 0.5rem 2.5rem 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  font-size: 1.5rem;
   color: #111;
   cursor: pointer;
 
