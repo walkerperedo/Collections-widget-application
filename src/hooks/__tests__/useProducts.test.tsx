@@ -4,7 +4,7 @@ import { fetchProductsFromShopify } from '../../api/storeFront'
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 
 // Mock API
-vi.mock('../api/storeFront', () => ({
+vi.mock('../../api/storeFront', () => ({
   fetchProductsFromShopify: vi.fn(),
 }))
 
