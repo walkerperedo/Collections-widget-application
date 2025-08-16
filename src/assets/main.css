@@ -1,0 +1,19 @@
+/* Application styles */
+
+.product-collection-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: auto;
+}
+
+.filter-sort-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-list-message {
+  text-align: center;
+  padding: 2rem;
+}
