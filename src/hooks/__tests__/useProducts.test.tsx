@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react'
-import { useProducts } from '../hooks/useProducts'
-import { fetchProductsFromShopify } from '../api/storeFront'
+import { useProducts } from '../useProducts'
+import { fetchProductsFromShopify } from '../../api/storeFront'
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 
 // Mock API
