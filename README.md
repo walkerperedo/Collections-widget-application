@@ -145,6 +145,10 @@ Create a new section in your Shopify theme, e.g. `sections/react-filter-widget.l
   ```bash
   npm run dev
   ```
+- Run tests with vitest
+  ```bash
+  npm run tests
+  ```
 - Build for production:
   ```bash
   npm run build
